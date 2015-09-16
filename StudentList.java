@@ -113,7 +113,7 @@ class StudentList {
     	for(int i = 0; i< L1.numberOfStudents; i++)
     	{
     		
-    		for(int j = 0 ; j < L2.numberOfStudents; ++)
+    		for(int j = 0 ; j < L2.numberOfStudents; j++)
     		{
     			if(L1.studentID[i]==L2.studentID[j])
     			{
