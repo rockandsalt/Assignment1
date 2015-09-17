@@ -1,7 +1,7 @@
 // COMP 250 - ASSIGNMENT #1
 
-// NAME: WRITE_YOUR_NAME_HERE
-// STUDENT ID: WRITE_YOUR_STUDENT_ID_HERE
+// NAME: Marc Wang
+// STUDENT ID: 260534272
 
 
 import java.io.*;    
@@ -108,7 +108,7 @@ class StudentList {
     public static int intersectionSizeNestedLoops(StudentList L1, StudentList L2) {
 	/* Write your code for question 1 here */
      
-    	List mergedlist = new List();
+    	List<Integer> mergedlist = new ArrayList<Integer>();
     	
     	for(int i = 0; i< L1.numberOfStudents; i++)
     	{
@@ -122,9 +122,7 @@ class StudentList {
     			
     		}
     		
-    	}
-    	
-    		
+    	}  		
 	return mergedlist.size();
     }
     
@@ -133,25 +131,111 @@ class StudentList {
     // It returns true if the array contains an element equal to ID, and false otherwise.
     public static boolean myBinarySearch(int mySortedArray[], int numberOfStudents, int ID) {
 	/* For question 2, Write your implementation of the binary search algorithm here */
+      
+       int i;
+       int upper = numberOfStudents-1;
+       int lower = 0;
+       while(upper>=lower) 
+	   {
+    	   i = (upper + lower)/2;
+	       if(mySortedArray[i]> ID )//look upper part
+	       {
+	    	   upper = i-1;
+	       }
+	       else if(mySortedArray[i]< ID)
+	       {
+	    	   lower = i+1;
+	       }
+	       if(mySortedArray[i]==ID)
+	       {
+	    	   return true; 
+	       }
+	   };
+       
 	return false;
     }
     
     
     public static int intersectionSizeBinarySearch(StudentList L1, StudentList L2) {
 	/* Write your code for question 2 here */
-	return 0;
+    	int counter = 0;
+    	L2.sort();
+    	for(int i =0 ; i< L1.numberOfStudents; i++)
+    	{
+    		if (StudentList.myBinarySearch(L2.studentID, L2.numberOfStudents, L1.studentID[i]))
+    		{
+    			counter = counter +1;
+    		}
+    		
+    	}
+    	
+	return counter;
     }
     
     
     public static int intersectionSizeSortAndParallelPointers(StudentList L1, StudentList L2) {
 	/* Write your code for question 3 here */
-	return 0;
+    	L1.sort();
+    	L2.sort();
+    	int inter = 0;
+    	int ptL1=0; 
+    	int ptL2=0; 
+    	
+    	while(ptL1<L1.numberOfStudents && ptL2 < L2.numberOfStudents)
+    	{
+    		if(L1.studentID[ptL1] == L2.studentID[ptL2])
+    		{
+				inter = inter+1;
+				ptL1 = ptL1+1;
+				ptL2 = ptL2+1;
+    			
+    		}
+    		else if(L1.studentID[ptL1] > L2.studentID[ptL2])
+    		{
+    			ptL2 = ptL2+1;    			
+    		}
+    		else
+    		{
+    			ptL1 = ptL1+1;
+    		}
+    	}
+    	
+	return inter;
     }
     
     
     public static int intersectionSizeMergeAndSort(StudentList L1, StudentList L2) {
 	/* Write your code for question 4 here */
-	return 0;
+    	List<Integer> mergedlist = new ArrayList<Integer>();
+    	for(int i = 0; i< L1.numberOfStudents; i++)
+    	{
+    		mergedlist.add(L1.studentID[i]);	
+    	}
+    	for(int i = 0 ; i <L2.numberOfStudents; i++)
+    	{
+    		mergedlist.add(L2.studentID[i]);
+    	}
+    	
+    	Collections.sort(mergedlist);
+    	
+    	int ptr = 0 ;
+    	int counter=0;
+    	while(ptr<mergedlist.size()-1)
+    	{
+    		if(mergedlist.get(ptr)==mergedlist.get(ptr+1))
+    		{
+    			counter= counter+1;
+    			ptr = ptr+2;
+    			
+    		}
+    		else
+    		{
+    			ptr = ptr+1; 
+    		}
+    		
+    	}
+    
+	return counter;
     }
     
     
@@ -173,23 +257,33 @@ class StudentList {
 	long startTime = System.nanoTime();
 	
 	// repeat the process a certain number of times, to make more accurate average measurements.
-	int numberRepetitions=1;
+	int numberRepetitions=3;
 	for (int rep=0;rep<numberRepetitions;rep++) {
 	    
 	    // This is how to generate lists of random IDs. 
 	    // For firstList, we generate 16 IDs
 	    // For secondList, we generate 16 IDs
 	    
-	    firstList=new StudentList(16 , "COMP250 - Introduction to Computer Science"); 
-	    secondList=new StudentList(16 , "MATH240 - Discrete Mathematics"); 
+	    firstList=new StudentList(32000, "COMP250 - Introduction to Computer Science"); 
+	    secondList=new StudentList(1024000, "MATH240 - Discrete Mathematics"); 
 
 	    // print the two lists, for future debugging purposes
-	    System.out.println(firstList);
-	    System.out.println(secondList);
+	    //System.out.println(firstList);
+	    //System.out.println(secondList);
 	    
-	    // run the intersection method
-	    int intersection=StudentList.intersectionSizeBinarySearch(firstList,secondList);
-	    System.out.println("The intersection size is: "+intersection);
+	    //run MergeSort
+	    //int intersection = StudentList.intersectionSizeMergeAndSort(firstList, secondList);
+	    
+	    //run Parrallel search
+	    //int intersection = StudentList.intersectionSizeSortAndParallelPointers(firstList, secondList);
+	    
+	    //run binary search
+	    //int intersection = StudentList.intersectionSizeBinarySearch(firstList, secondList);
+	    
+	    // run nested loop
+	    int intersection = StudentList.intersectionSizeNestedLoops(firstList, secondList);
+	    
+	    //System.out.println("The intersection size is: "+intersection);
 	}
 	
 	// get the time after the intersection
